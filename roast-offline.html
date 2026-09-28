@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roast การใช้เงิน | AI &amp; FinTech Buddy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;600&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16213E; --mint:#2EE6A6; --coral:#FF6B6B;
+  --bg:#EEF2F8; --card:#FFFFFF; --text:#16213E; --muted:#5B6478; --line:#D8DFEA;
+  --paper:#FFFDF7; --paper-ink:#1D1D1D;
+  --display:"Mitr","Sarabun",Tahoma,sans-serif;
+  --body:"Sarabun",Tahoma,"Leelawadee UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#0F1730; --card:#1A2547; --text:#EEF2F8; --muted:#AAB4C8; --line:#2C3A66; }
+}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 16px 40px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,6vw,44px);line-height:1.15;margin:0}
+.sub{color:var(--muted);margin:6px 0 0}
+.brand{font-family:var(--display);background:var(--ink);color:#fff;border-radius:999px;padding:8px 16px;font-size:15px;white-space:nowrap}
+.brand b{color:var(--mint);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+h2{font-family:var(--display);font-weight:600;font-size:21px;margin:0 0 4px}
+.hint{color:var(--muted);font-size:15px;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{border:1px solid var(--line);background:transparent;color:var(--text);border-radius:999px;padding:7px 12px;font:inherit;font-size:15px;cursor:pointer}
+.chip:hover{border-color:var(--mint)}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 96px 40px;gap:8px}
+input{font:inherit;font-size:16px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+input:focus,button:focus-visible{outline:3px solid var(--mint);outline-offset:1px}
+.del{border:none;background:transparent;color:var(--muted);font-size:22px;cursor:pointer;border-radius:10px}
+.del:hover{color:var(--coral)}
+.add{margin-top:10px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:10px;padding:9px;font:inherit;width:100%;cursor:pointer}
+.opts{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:18px 0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{border:none;background:transparent;color:var(--text);padding:8px 16px;font:inherit;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--coral);color:#fff}
+.go{width:100%;border:none;border-radius:14px;background:var(--coral);color:#fff;font-family:var(--display);font-size:22px;padding:14px;cursor:pointer}
+.err{color:var(--coral);font-size:15px;min-height:1.4em;margin:8px 0 0}
+.note{color:var(--muted);font-size:13.5px;margin-top:10px}
+.stage{display:flex;flex-direction:column;align-items:center}
+.receipt{position:relative;width:100%;max-width:420px;background:var(--paper);color:var(--paper-ink);padding:24px 22px 30px;
+  box-shadow:0 10px 30px rgba(10,20,50,.18);
+  -webkit-mask: radial-gradient(circle 7px at 50% 100%,transparent 98%,#000) 0 0/16px 100% repeat-x;
+          mask: radial-gradient(circle 7px at 50% 100%,transparent 98%,#000) 0 0/16px 100% repeat-x;}
+.receipt.empty{color:#7A808C}
+.rhead{text-align:center;border-bottom:1px dashed #B9B9B9;padding-bottom:12px;margin-bottom:12px}
+.rhead .t{font-family:var(--display);font-size:20px;font-weight:600;color:var(--paper-ink)}
+.rhead .m{font-size:13px;color:#6B6B6B}
+.line{display:flex;justify-content:space-between;gap:12px;font-size:15.5px}
+.line span:first-child{overflow-wrap:anywhere}
+.total{display:flex;justify-content:space-between;font-weight:700;border-top:1px dashed #B9B9B9;margin-top:10px;padding-top:10px}
+.sec{margin-top:16px}
+.tag{display:inline-block;font-family:var(--display);font-size:14px;border-radius:6px;padding:2px 8px;margin-bottom:6px}
+.tag.r{background:var(--coral);color:#fff}
+.tag.t{background:var(--mint);color:var(--ink)}
+.roast{font-size:18px;line-height:1.6}
+.extra{font-size:15.5px;line-height:1.6;margin-top:6px;color:#444}
+.tip{font-size:16px;line-height:1.6}
+.meter{margin-top:16px;font-size:14px}
+.bar{height:10px;border-radius:99px;background:#E7E2D6;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--coral)}
+.badge{margin-top:16px;text-align:center;font-family:var(--display);font-size:17px;border:2px solid var(--paper-ink);border-radius:10px;padding:8px;transform:rotate(-2deg)}
+.foot{text-align:center;font-size:12.5px;color:#6B6B6B;margin-top:16px}
+.print{animation:print .9s ease-out}
+@keyframes print{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@media (prefers-reduced-motion:reduce){.print{animation:none}}
+.after{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+.btn2{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:10px 16px;font:inherit;cursor:pointer}
+.share{font-size:14px;color:var(--muted);margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>โดนแซวการใช้เงิน</h1>
+      <p class="sub">ใส่ของที่ซื้อล่าสุด รับใบเสร็จฉบับโดนแซว พร้อมเคล็ดลับประหยัด 1 ข้อ</p>
+    </div>
+    <div class="brand">AI &amp; <b>FinTech Buddy</b></div>
+  </header>
+
+  <div class="grid">
+    <section class="panel" aria-labelledby="h-in">
+      <h2 id="h-in">ซื้ออะไรไปบ้าง?</h2>
+      <p class="hint">ใส่ 1–6 รายการ ใช้ของสมมติได้ ไม่ต้องใส่ข้อมูลบัญชีจริง</p>
+      <div class="chips" aria-label="ชุดตัวอย่าง">
+        <button class="chip" data-preset="0">สายชานม</button>
+        <button class="chip" data-preset="1">สายเกมเมอร์</button>
+        <button class="chip" data-preset="2">สายช้อปดึก</button>
+        <button class="chip" data-preset="3">สายเดลิเวอรี</button>
+        <button class="chip" data-preset="4">สายติ่ง</button>
+        <button class="chip" data-preset="5">สายสายกิน</button>
+      </div>
+      <div class="rows" id="rows"></div>
+      <button class="add" id="add">+ เพิ่มรายการ</button>
+      <div class="opts">
+        <span>ระดับความแซ่บ</span>
+        <div class="seg" role="group" aria-label="ระดับความแซ่บ">
+          <button type="button" data-level="soft" aria-pressed="true">เบาๆ</button>
+          <button type="button" data-level="spicy" aria-pressed="false">แซ่บ</button>
+        </div>
+      </div>
+      <button class="go" id="go">Roast เลย</button>
+      <p class="err" id="err" role="alert"></p>
+      <p class="note">คำแซวเป็นชุดข้อความที่ทีมเตรียมไว้ สุ่มตามของที่ซื้อ เพื่อความสนุกเท่านั้น ไม่ใช่คำแนะนำทางการเงิน</p>
+    </section>
+
+    <section class="stage" aria-labelledby="h-out" aria-live="polite">
+      <h2 id="h-out" style="align-self:flex-start;margin-bottom:12px">ใบเสร็จของคุณ</h2>
+      <div class="receipt empty" id="receipt"></div>
+      <div class="after" id="after" hidden>
+        <button class="btn2" id="more">แซวอีกรอบ</button>
+        <button class="btn2" id="again">เริ่มใหม่</button>
+      </div>
+      <p class="share" id="share" hidden>แคปหน้าจอไปอวดเพื่อนได้เลย</p>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+/* ================= คลังมุก =================
+   แต่ละหมวด: re = คำที่ใช้จับ, soft/spicy = คำแซว, tip = เคล็ดลับ, badge = ฉายา
+   เพิ่ม/แก้มุกได้ตรงนี้เลย */
+const CATS = [
+{ id:"drink", re:/ชานม|ไข่มุก|ชาไทย|ชาเขียว|ชามะลิ|กาแฟ|ลาเต้|latte|อเมริกาโน่|americano|คาปู|มอคค่า|โกโก้|นมชมพู|สมูทตี้|smoothie|บิงซู|น้ำปั่น|ชา(?!บู)|coffee|tea|boba|starbucks|สตาบัค|คาเฟ่|cafe/i,
+  soft:[
+    "รักชานมขนาดนี้ ร้านควรตั้งชื่อเมนูตามชื่อเธอแล้ว",
+    "ไข่มุกในแก้วคงจำหน้าเธอได้แล้วนะ",
+    "คาเฟ่แถวบ้านน่าจะนับเธอเป็นหุ้นส่วนไปแล้ว",
+    "ดื่มแบบนี้ ความหวานในชีวิตไม่ขาดแน่นอน",
+    "แก้วเดียวไม่พอ ต้องสองแก้วถึงจะเรียกว่าวันนี้",
+    "เงินเก็บอาจยังไม่โต แต่แต้มสะสมร้านชาเต็มแล้ว",
+    "รู้ใจตัวเองดีมาก รู้ว่าวันนี้ต้องการน้ำตาล",
+    "ถ้าชานมเป็นวิชา เธอได้เกรด 4 แน่นอน"
+  ],
+  spicy:[
+    "เลือดในตัวน่าจะเป็นชานมไปครึ่งหนึ่งแล้ว ไข่มุกยังเหนื่อยแทน",
+    "ค่าเครื่องดื่มเดือนนี้ พอซื้อเครื่องชงกาแฟได้ทั้งเครื่องแล้วนะ",
+    "บาริสต้าเห็นเธอเดินมา เริ่มชงก่อนสั่งแล้ว",
+    "กระปุกออมสินหิวเหมือนกันนะ แต่เธอเลือกให้อาหารแก้วชามากกว่า",
+    "ถ้าวัดจากชานม เธอคือนักลงทุนรายใหญ่ของร้านนี้",
+    "น้ำตาลในแก้วเยอะไม่เท่าเงินที่ละลายไปกับมันหรอก",
+    "ชาไข่มุกไม่ใช่สินทรัพย์นะ ถึงจะเก็บไว้ในตัวก็ตาม"
+  ],
+  tip:[
+    "ลองกำหนดวันชานมแค่ 2–3 วันต่อสัปดาห์ แล้วโอนเงินส่วนวันที่ไม่ได้ซื้อเข้ากระปุกออม",
+    "เลือกไซส์เล็กลงหรือหวานน้อย ประหยัดทั้งเงินและน้ำตาล",
+    "พกกระบอกน้ำไปเอง บางร้านลดราคาให้ด้วย",
+    "ตั้งงบเครื่องดื่มต่อสัปดาห์ แยกไว้ในกระเป๋าย่อยเช่น Cloud Pocket ให้เห็นยอดชัดๆ"
+  ],
+  badge:["เจ้าแม่ชานม","ลูกค้า VIP ร้านชา","นักชิมไข่มุก","คาเฟ่ฮอปเปอร์ตัวจริง","หุ้นส่วนร้านกาแฟ"] },
+
+{ id:"game", re:/เกม|เติม|สกิน|skin|กาชา|gacha|ตู้สุ่ม|rov|roblox|robux|valorant|free ?fire|pubg|genshin|honkai|minecraft|steam|diamond|เพชร|battle ?pass|แพ็ก|ไอเทม|topup|top ?up/i,
+  soft:[
+    "สกินสวยมาก แต่กระเป๋าตังค์ก็อยากได้เลเวลอัปบ้างนะ",
+    "ตัวละครในเกมแต่งตัวดีกว่าเจ้าของแล้ว",
+    "เติมเกมเก่งแบบนี้ ถ้าเติมเงินเก็บได้ด้วยจะเป็นตำนาน",
+    "ในเกมคือแรงค์สูง ในบัญชีออมยังเป็นมือใหม่อยู่",
+    "เควสต์ต่อไป: เก็บเงินให้ได้เท่าที่เติมเกม",
+    "เลือกลงทุนกับความสุขได้ตรงจุดดีมาก",
+    "ตู้สุ่มชอบเธอมาก เพราะเธอไม่เคยทิ้งมัน"
+  ],
+  spicy:[
+    "ตู้สุ่มได้ของดี แต่เงินในบัญชีสุ่มได้ศูนย์",
+    "ค่าเติมเกมเดือนนี้ ทีมพัฒนาเกมควรส่งการ์ดขอบคุณมาให้",
+    "ตัวละครมีชุดใหม่ทุกเดือน เจ้าของใส่เสื้อตัวเดิมมาสามปี",
+    "ถ้าเก็บเงินได้เหมือนเก็บเลเวล ป่านนี้รวยไปแล้ว",
+    "แบทเทิลพาสครบทุกซีซั่น แต่แผนการเงินยังไม่มีซีซั่นแรก",
+    "เพชรในเกมเยอะมาก เพชรในชีวิตจริงยังไม่มีสักเม็ด"
+  ],
+  tip:[
+    "ตั้งเพดานเติมเกมต่อเดือน แล้วแยกเงินส่วนนี้ไว้ในกระเป๋าย่อยให้ชัด",
+    "ก่อนเติม รอ 1 วัน ถ้ายังอยากได้ค่อยเติม จะตัดการเติมตามอารมณ์ได้เยอะ",
+    "ปิดการตัดเงินอัตโนมัติจากบัตรในร้านค้าแอป จะได้ต้องคิดก่อนทุกครั้ง",
+    "เติมเฉพาะช่วงโปรที่คุ้มจริง ไม่เติมเพราะกลัวพลาดของลิมิเต็ด"
+  ],
+  badge:["นักเติมมืออาชีพ","สปอนเซอร์ค่ายเกม","เจ้าพ่อตู้สุ่ม","แรงค์สูงบัญชีต่ำ","เกมเมอร์ทุนหนา"] },
+
+{ id:"delivery", re:/ค่าส่ง|ส่งฟรี|เดลิเวอรี|delivery|grab ?food|line ?man|ไลน์แมน|food ?panda|แพนด้า|robinhood|shopee ?food|ค่าบริการ|สั่งอาหาร|สั่งข้าว/i,
+  soft:[
+    "ไรเดอร์น่าจะจำหน้าบ้านเธอได้ขึ้นใจแล้ว",
+    "สะดวกสุดๆ แต่ค่าส่งก็สะดวกไหลออกจากกระเป๋าเหมือนกัน",
+    "เก่งมาก เลือกเมนูได้ในสามวินาที",
+    "ประตูบ้านเปิดบ่อยกว่าตู้เย็นอีก",
+    "แอปเดลิเวอรีคงส่งการ์ดวันเกิดให้เธอทุกปี",
+    "ขาได้พักผ่อนเต็มที่ ส่วนเงินได้ออกกำลังกายแทน"
+  ],
+  spicy:[
+    "ค่าส่งกับค่าบริการรวมกันเริ่มแพงกว่าอาหารแล้วนะ",
+    "เดินไปร้านห้านาที แต่เลือกจ่ายค่าส่งยี่สิบห้าบาท คุ้มมาก",
+    "ไรเดอร์รู้ตารางชีวิตเธอดีกว่าเพื่อนสนิทอีก",
+    "ถ้าค่าส่งเป็นค่าเทอม ป่านนี้เรียนจบไปแล้วหนึ่งวิชา",
+    "โค้ดส่วนลดใช้หมดแล้ว แต่ความขี้เกียจยังไม่หมด",
+    "ตู้เย็นที่บ้านเหงามาก ไม่มีใครเปิดเลย"
+  ],
+  tip:[
+    "รวมออร์เดอร์กับเพื่อน หารค่าส่งกัน จ่ายน้อยลงทันที",
+    "ตั้งกติกาสั่งเดลิเวอรีไม่เกิน 2 มื้อต่อสัปดาห์ มื้อที่เหลือเดินไปซื้อเอง",
+    "ดูยอดรวมหลังบวกค่าส่งและค่าบริการก่อนกดสั่งทุกครั้ง",
+    "ทำอาหารง่ายๆ ติดบ้านไว้บ้าง เผื่อวันขี้เกียจจะได้ไม่ต้องสั่ง"
+  ],
+  badge:["ลูกค้าประจำไรเดอร์","เจ้าของโค้ดส่วนลด","สายสั่งไม่เดิน","ขาประจำแอปเดลิเวอรี"] },
+
+{ id:"shop", re:/เสื้อ|กางเกง|กระโปรง|เดรส|รองเท้า|กระเป๋า|หมวก|ถุงเท้า|เคส|shopee|ช้อปปี้|lazada|ลาซาด้า|tiktok ?shop|ลดราคา|เซล|sale|โปร|flash|ไลฟ์สด|ตีสอง|เที่ยงคืน|11\.11|12\.12|ช้อป/i,
+  soft:[
+    "ทุกอย่างที่ลดราคาไม่จำเป็นต้องกลับบ้านกับเรานะ",
+    "ไลฟ์สดเมื่อคืนสนุกมากใช่ไหม ดูจากใบเสร็จแล้วใช่",
+    "ตู้เสื้อผ้าเริ่มต้องการตู้เสื้อผ้าอีกใบแล้ว",
+    "พัสดุมาส่งบ่อยจนพี่ไปรษณีย์ทักเป็นเพื่อนแล้ว",
+    "สไตล์ดีมาก แต่บัญชีออมยังไม่มีสไตล์",
+    "กดใส่ตะกร้าเร็วกว่ากดตอบแชตเพื่อนอีก"
+  ],
+  spicy:[
+    "ลดราคาไม่ได้แปลว่าฟรีนะ แต่เธอซื้อเหมือนมันฟรี",
+    "ซื้อตอนตีสอง ตื่นมาถึงรู้ว่าเมื่อคืนเราเป็นใคร",
+    "แอปช้อปปิ้งควรตั้งเธอเป็นแบรนด์แอมบาสเดอร์",
+    "ลดห้าสิบเปอร์เซ็นต์ แต่ซื้อสามชิ้น ประหยัดแบบนี้ไม่ประหยัดนะ",
+    "ค่าส่งฟรีเพราะซื้อครบขั้นต่ำ แต่ขั้นต่ำนั้นเกินงบไปสามร้อย",
+    "เสื้อใหม่เยอะจนใส่ไม่ทันก่อนเทรนด์จะเปลี่ยน"
+  ],
+  tip:[
+    "ใส่ของไว้ในตะกร้าก่อน 24 ชั่วโมง ถ้าพรุ่งนี้ยังอยากได้ค่อยซื้อ",
+    "ปิดแจ้งเตือนแอปช้อปปิ้งตอนกลางคืน ตัดการซื้อตอนง่วงได้เยอะ",
+    "ก่อนซื้อ ถามตัวเองว่าจะใส่หรือใช้อย่างน้อย 10 ครั้งไหม",
+    "อย่าซื้อเพิ่มแค่เพื่อให้ได้ส่งฟรี คิดยอดรวมก่อนเสมอ"
+  ],
+  badge:["สายช้อปเที่ยงคืน","ราชินีตะกร้าสินค้า","ลูกค้าประจำไลฟ์สด","นักล่าโปรตัวจริง","เพื่อนสนิทพี่ไปรษณีย์"] },
+
+{ id:"food", re:/ข้าว|มาม่า|บะหมี่|หมูกระทะ|ชาบู|สุกี้|บุฟเฟ่ต์|buffet|ไก่ทอด|kfc|mcd|แมค|พิซซ่า|pizza|ส้มตำ|ก๋วยเตี๋ยว|ขนม|ขนมปัง|เค้ก|โดนัท|ไอติม|ไอศกรีม|ชีส|ปิ้งย่าง|ซูชิ|ราเมง|หมาล่า|เซเว่น|7-?11|ของกิน|อาหาร|เบอร์เกอร์|burger/i,
+  soft:[
+    "สายกินตัวจริง ท้องอิ่มใจก็อิ่ม",
+    "กินเก่งแบบนี้ ถ้าเก็บเงินเก่งด้วยจะไม่มีใครสู้",
+    "เซเว่นคงจำหน้าเธอได้ทุกสาขาแล้ว",
+    "ดูแลกระเพาะดีมาก ตอนนี้ขอให้ดูแลกระเป๋าตังค์บ้าง",
+    "มื้อนี้คุ้มค่าทางใจมาก ทางกระเป๋าขอพิจารณาอีกที",
+    "เลือกเมนูเก่งกว่าเลือกคณะอีก"
+  ],
+  spicy:[
+    "บุฟเฟ่ต์ต้องกินให้คุ้ม แต่เงินเก็บไม่ต้องคุ้มก็ได้ใช่ไหม",
+    "กินหมาล่าจนลิ้นชา แต่กระเป๋าตังค์ชากว่า",
+    "เซเว่นไปแค่ซื้อน้ำ ออกมาพร้อมถุงใหญ่ทุกครั้ง",
+    "ขนมเยอะขนาดนี้ ควรเปิดร้านขายต่อได้แล้ว",
+    "ร้านชาบูเห็นเธอแล้วรีบเติมน้ำซุปรอ",
+    "กินเพื่ออยู่ไม่ใช่แนว เธอคือสายอยู่เพื่อกิน"
+  ],
+  tip:[
+    "ตั้งงบอาหารรายวันไว้ ถ้าวันไหนเหลือ โอนส่วนที่เหลือเข้ากระปุกออม",
+    "เข้าเซเว่นพร้อมรายการของที่จะซื้อ ไม่เดินวนดูทุกชั้น",
+    "มื้อใหญ่อย่างบุฟเฟ่ต์ ตั้งไว้เป็นรางวัลเดือนละครั้ง จะอร่อยกว่าเดิม",
+    "พกขนมจากบ้านไปโรงเรียน ลดค่าขนมจุกจิกระหว่างวัน"
+  ],
+  badge:["สายกินตัวจริง","ลูกค้าประจำเซเว่น","นักชิมระดับตำนาน","เจ้าแม่หมาล่า","กระเพาะไร้ก้น"] },
+
+{ id:"fandom", re:/อัลบั้ม|บั้ม|album|การ์ด|โฟโต้การ์ด|photocard|lightstick|แท่งไฟ|บัตรคอน|คอนเสิร์ต|concert|แฟนมีต|fanmeet|ติ่ง|ศิลปิน|idol|ไอดอล|merch|สินค้าศิลปิน|labubu|ลาบูบู้|art ?toy|อาร์ตทอย|กล่องสุ่ม|pop ?mart|ป๊อปมาร์ท|crybaby|สุ่ม/i,
+  soft:[
+    "ซัพพอร์ตศิลปินเต็มที่มาก ศิลปินต้องภูมิใจแน่ๆ",
+    "ใจเต็มร้อย รักเต็มร้อย เงินเหลือสิบ",
+    "กล่องสุ่มสนุกตรงที่ไม่รู้ว่าได้อะไร ส่วนเงินรู้เลยว่าหายไปไหน",
+    "ชั้นวางโชว์สวยมาก แต่กระปุกออมยังโล่งอยู่",
+    "สะสมเก่งแบบนี้ ถ้าสะสมเงินด้วยจะครบเซ็ตพอดี",
+    "ติ่งอย่างมีสไตล์ ขอแค่มีงบประจำเดือนด้วย"
+  ],
+  spicy:[
+    "สุ่มกล่องจนได้ตัวซ้ำสามตัว แต่ตัวที่อยากได้ยังไม่มา",
+    "ศิลปินรวยขึ้นทุกครั้งที่เธอเปิดแอป",
+    "บัตรคอนแพงกว่าค่าเทอมหนึ่งเดือน แต่ความสุขก็เยอะกว่าจริง",
+    "การ์ดใบนี้ราคาเท่ากับชานมยี่สิบแก้ว คิดดีแล้วใช่ไหม",
+    "ถ้าเก็บเงินได้เหมือนเก็บการ์ด คงครบเซ็ตเศรษฐีแล้ว",
+    "ลาบูบู้ยิ้มกว้าง เพราะรู้ว่าเธอจะกลับมาอีก"
+  ],
+  tip:[
+    "ตั้งงบซัพพอร์ตศิลปินต่อเดือน แล้วเก็บไว้ใน Pocket แยก ใช้แค่เงินก้อนนั้น",
+    "กล่องสุ่มให้ซื้อแค่จำนวนที่ตั้งไว้ ไม่ต่อเพราะอยากได้ตัวลับ",
+    "เก็บเงินล่วงหน้าสำหรับคอนเสิร์ต ดีกว่าต้องรีบหาเงินตอนบัตรเปิดขาย",
+    "ถ้าอยากได้ตัวเฉพาะ ลองแลกกับเพื่อนแทนการสุ่มต่อ"
+  ],
+  badge:["ติ่งทุนหนา","นักสุ่มสายมู","ผู้สนับสนุนศิลปินอันดับหนึ่ง","เจ้าของชั้นวางโชว์","ลาบูบู้เลิฟเวอร์"] },
+
+{ id:"beauty", re:/ลิป|lip|ครีม|เซรั่ม|serum|สกินแคร์|skincare|เครื่องสำอาง|แป้ง|รองพื้น|คุชชั่น|มาสคาร่า|น้ำหอม|perfume|กันแดด|โฟม|โทนเนอร์|ยาทาเล็บ|ทาเล็บ|บิวตี้|watsons|วัตสัน|eveandboy|อีฟแอนด์บอย|sephora/i,
+  soft:[
+    "ผิวดีขึ้นทุกวัน กระเป๋าตังค์บางลงทุกวัน สมดุลดี",
+    "ลิปสีนี้กับสีที่มีอยู่แล้วต่างกันนิดเดียว แต่ความสุขต่างกันเยอะ",
+    "ดูแลตัวเองดีมาก ขอให้ดูแลเงินออมแบบเดียวกันนะ",
+    "โต๊ะเครื่องแป้งเริ่มเหมือนร้านสาขาย่อยแล้ว",
+    "กลิ่นหอมมาก หอมกว่ายอดเงินคงเหลืออีก"
+  ],
+  spicy:[
+    "ลิปเฉดที่ยี่สิบ แต่ใช้จริงอยู่สองแท่ง",
+    "เซรั่มหลายขวดจนหน้าไม่รู้จะดูดซึมตัวไหนก่อน",
+    "เข้าร้านไปซื้อกันแดด ออกมาพร้อมตะกร้าเต็ม",
+    "สกินแคร์สิบขั้นตอน แผนการเงินยังศูนย์ขั้นตอน"
+  ],
+  tip:[
+    "ใช้ของเดิมให้หมดก่อนซื้อชิ้นใหม่ประเภทเดียวกัน",
+    "ลองตัวอย่างหรือขนาดเล็กก่อน ค่อยซื้อขวดใหญ่เมื่อชอบจริง",
+    "จดว่ามีสีหรือสูตรอะไรอยู่แล้ว จะได้ไม่ซื้อซ้ำ"
+  ],
+  badge:["บิวตี้บล็อกเกอร์ไม่มีช่อง","ราชินีลิปสติก","สายสกินแคร์ตัวตึง","ลูกค้าประจำร้านบิวตี้"] },
+
+{ id:"sub", re:/netflix|เน็ตฟลิกซ์|spotify|สปอติฟาย|youtube ?premium|ยูทูบพรีเมียม|disney|ดิสนีย์|prime ?video|viu|wetv|iqiyi|apple ?music|icloud|สมาชิก|subscription|ซับ|แพ็กเกจ|รายเดือน|โค้ดดูหนัง|chatgpt|canva/i,
+  soft:[
+    "สมาชิกหลายแอปมาก ดูครบทุกเรื่องแล้วหรือยัง",
+    "ชีวิตพรีเมียมทุกแอป ขอให้บัญชีออมพรีเมียมด้วย",
+    "ค่าสมาชิกเล็กๆ ที่รวมกันแล้วไม่เล็กเลย",
+    "ความบันเทิงครบวงจร ขาดแค่เวลาดู"
+  ],
+  spicy:[
+    "จ่ายสมาชิกห้าแอป แต่เปิดดูแค่แอปเดียว",
+    "แอปที่สมัครไว้บางตัวคงลืมไปแล้วว่ามีเธอเป็นสมาชิก",
+    "ตัดเงินอัตโนมัติทุกเดือน เงียบๆ แต่ชัวร์กว่าแฟนอีก",
+    "ดูซีรีส์จบทุกเรื่อง แต่ยังไม่เคยดูยอดเงินตัวเองจบสักเดือน"
+  ],
+  tip:[
+    "เช็คการสมัครสมาชิกทั้งหมดในมือถือ ยกเลิกตัวที่ไม่ได้ใช้เกิน 1 เดือน",
+    "หมุนเวียนสมัครทีละแอปตามเรื่องที่อยากดู แทนการสมัครทุกแอปพร้อมกัน",
+    "ลองแชร์แพ็กเกจครอบครัวกับคนในบ้าน ถ้าแอปนั้นอนุญาต"
+  ],
+  badge:["สมาชิกพรีเมียมทุกแอป","นักดูซีรีส์ไม่หลับไม่นอน","ราชาการตัดเงินอัตโนมัติ"] },
+
+{ id:"transport", re:/bts|mrt|รถไฟฟ้า|วินมอไซค์|วิน(?!เทจ)|มอไซค์|แท็กซี่|taxi|grab ?bike|grab ?car|bolt|โบลท์|รถเมล์|น้ำมัน|ค่ารถ|ค่าเดินทาง|เรือ|รถตู้/i,
+  soft:[
+    "เดินทางไกลแบบนี้ ขยันไปเรียนมาก",
+    "ค่าเดินทางเป็นค่าใช้จ่ายจำเป็น ได้รับการยกเว้นการแซวหนึ่งครั้ง",
+    "สายคล่องตัว ไปไหนก็ไปได้",
+    "ตื่นสายแล้วเรียกวินใช่ไหม ดูออก"
+  ],
+  spicy:[
+    "ห้านาทีเดินถึง แต่เรียกวินทุกครั้ง ขาเริ่มงอนแล้ว",
+    "แท็กซี่ทุกวัน เหมือนมีคนขับส่วนตัวแบบรายเที่ยว",
+    "ถ้าตื่นเร็วขึ้นสิบนาที จะประหยัดได้เดือนละหลายร้อย",
+    "แอปเรียกรถควรให้ส่วนลดสมาชิกระดับทองแล้ว"
+  ],
+  tip:[
+    "ลองบัตรเดินทางแบบเที่ยวหรือรายเดือน ถ้านั่งเส้นเดิมเป็นประจำ",
+    "ระยะใกล้ลองเดินหรือปั่นจักรยาน ได้ทั้งเงินและสุขภาพ",
+    "ออกจากบ้านเร็วขึ้นนิดหน่อย จะไม่ต้องเรียกรถเพราะรีบ"
+  ],
+  badge:["นักเดินทางสายเร่งรีบ","ลูกค้าประจำวิน","ผู้โดยสารระดับทอง"] },
+
+{ id:"gadget", re:/หูฟัง|airpods|มือถือ|iphone|ไอโฟน|samsung|ไอแพด|ipad|แท็บเล็ต|คีย์บอร์ด|keyboard|เมาส์|mouse|จอคอม|มอนิเตอร์|monitor|โน้ตบุ๊ก|notebook|laptop|สายชาร์จ|ที่ชาร์จ|พาวเวอร์แบงค์|power ?bank|ลำโพง|กล้อง|สมาร์ทวอทช์|smart ?watch|nintendo|switch|ps5|playstation|จอยเกม/i,
+  soft:[
+    "ของใหม่ไฉไลมาก ขอให้ใช้ให้คุ้มนะ",
+    "สายเทคตัวจริง อุปกรณ์ครบกว่าร้านไอที",
+    "อัปเกรดอุปกรณ์เก่ง ต่อไปอัปเกรดเงินออมบ้างนะ",
+    "เสียงหูฟังชัดมาก ชัดพอๆ กับเสียงกระเป๋าตังค์ร้องไห้"
+  ],
+  spicy:[
+    "เครื่องเก่ายังใช้ได้ แต่ใจมันอยากได้เครื่องใหม่",
+    "สายชาร์จเส้นที่สิบ เพราะเส้นเก่าหายหมด",
+    "คีย์บอร์ดเสียงกดดังมาก ดังกว่าเสียงเตือนเงินหมดอีก",
+    "ผ่อนศูนย์เปอร์เซ็นต์ไม่ได้แปลว่าศูนย์บาทนะ"
+  ],
+  tip:[
+    "ของชิ้นใหญ่ ตั้งเป้าเก็บเงินก่อนซื้อ ดีกว่าผ่อนแบบไม่ได้วางแผน",
+    "เทียบราคาอย่างน้อย 3 ร้าน และดูรุ่นก่อนหน้าที่ราคาลงแล้ว",
+    "ดูแลของที่มีให้ดี ใส่เคสหรือเก็บสายชาร์จเป็นที่ จะได้ไม่ต้องซื้อซ้ำ"
+  ],
+  badge:["สายเทคทุนหนา","เจ้าของสายชาร์จสิบเส้น","นักอัปเกรดตัวยง"] },
+
+{ id:"study", re:/หนังสือ|ชีท|สมุด|ปากกา|ดินสอ|ไฮไลท์|เครื่องเขียน|คอร์ส|เรียนพิเศษ|ติว|ค่าเรียน|ค่าเทอม|อุปกรณ์การเรียน|ค่าสมัครสอบ|สอบ/i,
+  soft:[
+    "ลงทุนกับการเรียน แบบนี้ไม่ต้องแซว ขอชมหนึ่งที",
+    "ปากกาเยอะขนาดนี้ จดโน้ตสวยแน่นอน",
+    "ขยันขนาดนี้ อนาคตคงมีเงินเก็บเยอะ",
+    "การลงทุนที่ดีที่สุดคือลงทุนกับตัวเอง เธอเข้าใจถูกแล้ว"
+  ],
+  spicy:[
+    "ปากกาไฮไลท์ครบทุกสี แต่ยังไม่ได้เปิดหนังสือ",
+    "ซื้อสมุดใหม่ทุกเทอม เล่มเก่ายังเขียนไม่ถึงหน้าสิบ",
+    "เครื่องเขียนน่ารักมาก จนไม่กล้าเอาไปใช้",
+    "คอร์สออนไลน์ซื้อไว้หลายคอร์ส ดูจบแค่บทแรก"
+  ],
+  tip:[
+    "ใช้ของเดิมให้หมดก่อนซื้อเครื่องเขียนชุดใหม่",
+    "ลองหาชีทหรือหนังสือมือสองจากรุ่นพี่ ประหยัดได้เยอะ",
+    "คอร์สออนไลน์ ซื้อทีละคอร์ส เรียนจบค่อยซื้อคอร์สต่อไป"
+  ],
+  badge:["นักเรียนดีเด่นสายลงทุน","ราชินีปากกาไฮไลท์","นักสะสมสมุด"] }
+];
+
+const GENERIC = {
+  soft:[
+    "ใช้เงินเรียบร้อยดี แต่เรายังหาเรื่องแซวได้อยู่ดี",
+    "รายการนี้ลึกลับมาก ขอเก็บไว้เป็นความลับของเธอก็แล้วกัน",
+    "เลือกซื้อได้มีเอกลักษณ์ ไม่ซ้ำใครจริงๆ",
+    "ใบเสร็จนี้บอกเลยว่าเธอเป็นคนรู้ใจตัวเอง"
+  ],
+  spicy:[
+    "ของที่ซื้อแปลกจนระบบแซวต้องคิดนาน",
+    "ไม่แน่ใจว่าซื้ออะไร แต่แน่ใจว่าเงินหายไปแล้ว",
+    "ใบเสร็จนี้อ่านแล้วงง แต่กระเป๋าตังค์เข้าใจทุกบรรทัด"
+  ],
+  tip:[
+    "ลองจดรายจ่ายสัก 7 วันด้วยแอปอย่างเหมียวจดหรือ FinPow จะเห็นว่าเงินไหลไปไหนมากที่สุด",
+    "ใช้กฎ 50/30/20 เป็นจุดเริ่ม: จำเป็น 50 อยากได้ 30 ออม 20",
+    "ตั้งออมอัตโนมัติวันที่ได้เงิน เช่นฟีเจอร์แอบเก็บหรือสั่งเก็บของ Kept ก่อนเริ่มใช้จ่าย",
+    "ก่อนซื้อถามตัวเองว่า จำเป็น หรือแค่อยากได้"
+  ],
+  badge:["นักใช้เงินสายลึกลับ","ผู้ใช้เงินอย่างมีเอกลักษณ์","คนรู้ใจตัวเอง"]
+};
+
+/* มุกเสริมตามยอดรวมและจำนวนรายการ */
+const TOTAL_LINES = [
+  { max:100, lines:["ยอดรวมน่ารักมาก กระเป๋าตังค์ยังยิ้มได้","ประหยัดขนาดนี้ ขอคารวะหนึ่งที"] },
+  { max:300, lines:["ยอดรวมยังพอไหว แต่อย่าเพิ่งวางใจ","ยอดนี้ถ้าทำทุกวัน เดือนนึงก็หลายพันนะ"] },
+  { max:700, lines:["ยอดรวมทำเอากระเป๋าตังค์ถอนหายใจเบาๆ","ยอดนี้เท่ากับค่าขนมหลายวันเลยนะ"] },
+  { max:1500, lines:["ยอดรวมนี้ กระปุกออมสินได้ยินแล้วเป็นลม","ใบเสร็จยาวแบบนี้ ต้องมีผู้ช่วยจดรายจ่ายแล้วล่ะ"] },
+  { max:Infinity, lines:["ยอดรวมนี้ ขอเรียกว่าการลงทุนครั้งใหญ่","ยอดนี้ธนาคารน่าจะโทรมาถามว่าโอเคไหม"] }
+];
+const MIX_LINES = [
+  "ซื้อหลากหลายหมวดมาก เหมือนบุฟเฟ่ต์การใช้เงิน",
+  "ใบเสร็จนี้มีครบทุกรสชาติของชีวิต",
+  "ครอบคลุมทุกหมวด แบบนี้เรียกว่าใช้เงินรอบด้าน"
+];
+const REPEAT_LINES = [
+  "ซื้อซ้ำแบบนี้ เรียกว่ารักจริงไม่ใช่แค่ชอบ",
+  "ของเดิมซ้ำสองรอบ สัญญาณว่าติดแล้ว"
+];
+
+const PRESETS = [
+  [["ชานมไข่มุก",65],["ชานมไข่มุก",65],["ขนมปังปิ้ง",45]],
+  [["เติมเกม",300],["สกินตัวละคร",199],["มาม่า",8]],
+  [["เสื้อลดราคาตอนตีสอง",590],["เคสมือถือ",159],["ค่าส่ง",38]],
+  [["ข้าวผัดเดลิเวอรี",89],["ค่าส่ง",25],["ชาไทย",55],["ค่าบริการแอป",15]],
+  [["กล่องสุ่มอาร์ตทอย",420],["โฟโต้การ์ด",250],["ชานมไข่มุก",65]],
+  [["หมูกระทะ",299],["ขนมเซเว่น",87],["ไอติม",45]]
+];
+
+/* ================= ตัวระบบ ================= */
+const rowsEl = document.getElementById("rows");
+const errEl = document.getElementById("err");
+const receipt = document.getElementById("receipt");
+const after = document.getElementById("after");
+const shareEl = document.getElementById("share");
+let level = "soft";
+let last = {};
+
+function addRow(name, price){
+  if (rowsEl.children.length >= 6) return;
+  const r = document.createElement("div");
+  r.className = "row";
+  r.innerHTML = '<input class="n" maxlength="40" placeholder="เช่น ชานมไข่มุก" aria-label="ชื่อรายการ">' +
+    '<input class="p" inputmode="decimal" maxlength="7" placeholder="บาท" aria-label="ราคา (บาท)">' +
+    '<button class="del" type="button" aria-label="ลบรายการ">×</button>';
+  r.querySelector(".n").value = name || "";
+  r.querySelector(".p").value = price != null ? price : "";
+  r.querySelector(".del").onclick = () => { r.remove(); if (!rowsEl.children.length) addRow(); };
+  rowsEl.appendChild(r);
+}
+function setRows(list){ rowsEl.innerHTML = ""; list.forEach(([n,p]) => addRow(n,p)); }
+function readItems(){
+  const out = [];
+  for (const r of rowsEl.children){
+    const n = r.querySelector(".n").value.trim();
+    const pRaw = r.querySelector(".p").value.replace(/,/g,"").trim();
+    if (!n && !pRaw) continue;
+    const p = Number(pRaw);
+    if (!n) return { error:"มีรายการที่ใส่ราคาแต่ยังไม่มีชื่อ" };
+    if (!pRaw || !isFinite(p) || p < 0 || p > 1000000) return { error:'ราคาของ "' + n + '" ต้องเป็นตัวเลข 0–1,000,000' };
+    out.push({ name:n, price:Math.round(p*100)/100 });
+  }
+  if (!out.length) return { error:"ใส่อย่างน้อย 1 รายการ หรือกดเลือกชุดตัวอย่างด้านบน" };
+  return { items:out };
+}
+const fmt = n => n.toLocaleString("th-TH",{maximumFractionDigits:2});
+function pick(arr, key){
+  if (!arr || !arr.length) return "";
+  if (arr.length === 1) return arr[0];
+  let v, tries = 0;
+  do { v = arr[Math.floor(Math.random()*arr.length)]; tries++; } while (v === last[key] && tries < 8);
+  last[key] = v; return v;
+}
+function esc(s){ const d=document.createElement("div"); d.textContent=String(s??""); return d.innerHTML; }
+
+function analyse(items){
+  const score = {};
+  items.forEach(i => {
+    const c = CATS.find(c => c.re.test(i.name));
+    const id = c ? c.id : "other";
+    score[id] = (score[id]||0) + i.price + 1;
+  });
+  const ranked = Object.entries(score).sort((a,b)=>b[1]-a[1]);
+  const topId = ranked.find(([id])=>id!=="other");
+  const cat = topId ? CATS.find(c=>c.id===topId[0]) : null;
+  const catsUsed = ranked.filter(([id])=>id!=="other").length;
+  const names = items.map(i=>i.name.replace(/\s|\(.*?\)|แก้วที่\s*\d/g,""));
+  const hasRepeat = names.some((n,i)=>n && names.indexOf(n)!==i);
+  return { cat, catsUsed, hasRepeat };
+}
+
+function roast(items){
+  const a = analyse(items);
+  const src = a.cat || GENERIC;
+  const total = items.reduce((s,i)=>s+i.price,0);
+  const main = pick(src[level] || src.soft, "main");
+  const extras = [];
+  if (a.hasRepeat) extras.push(pick(REPEAT_LINES,"rep"));
+  else if (a.catsUsed >= 3) extras.push(pick(MIX_LINES,"mix"));
+  extras.push(pick(TOTAL_LINES.find(t => total <= t.max).lines, "tot"));
+  return { main, extra: extras.join(" "), tip: pick(src.tip,"tip"), badge: pick(src.badge,"badge"), total };
+}
+
+function render(items, r){
+  const now = new Date();
+  const stamp = now.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"2-digit"}) + " " + now.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"});
+  const heat = Math.min(100, Math.round(20 + Math.log10(r.total+1)*22 + (level==="spicy"?12:0)));
+  receipt.className = "receipt";
+  void receipt.offsetWidth;
+  receipt.className = "receipt print";
+  receipt.innerHTML =
+    '<div class="rhead"><div class="t">ร้านโดนแซว</div><div class="m">' + esc(stamp) + '</div></div>' +
+    items.map(i => '<div class="line"><span>' + esc(i.name) + '</span><span>' + fmt(i.price) + '</span></div>').join("") +
+    '<div class="total"><span>รวม</span><span>' + fmt(r.total) + ' บาท</span></div>' +
+    '<div class="sec"><span class="tag r">โดนแซว</span><div class="roast">' + esc(r.main) + '</div><div class="extra">' + esc(r.extra) + '</div></div>' +
+    '<div class="meter">ระดับความเผ็ดของใบเสร็จ ' + heat + '%<div class="bar"><i style="width:' + heat + '%"></i></div></div>' +
+    '<div class="sec"><span class="tag t">โหมดจริงจัง</span><div class="tip">' + esc(r.tip) + '</div></div>' +
+    '<div class="badge">ฉายา: ' + esc(r.badge) + '</div>' +
+    '<div class="foot">บูธ AI &amp; FinTech Buddy · เพื่อความสนุก ไม่ใช่คำแนะนำทางการเงิน</div>';
+  after.hidden = false; shareEl.hidden = false;
+  if (window.innerWidth < 860) receipt.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" });
+}
+
+function emptyReceipt(){
+  receipt.className = "receipt empty";
+  receipt.innerHTML = '<div class="rhead"><div class="t">ร้านโดนแซว</div><div class="m">รอรายการจากคุณ</div></div><p style="margin:0">กรอกรายการ แล้วกด "Roast เลย" ใบเสร็จจะพิมพ์ออกมาที่นี่</p>';
+  after.hidden = true; shareEl.hidden = true;
+}
+
+function run(){
+  errEl.textContent = "";
+  const r = readItems();
+  if (r.error){ errEl.textContent = r.error; return; }
+  render(r.items, roast(r.items));
+}
+
+document.querySelectorAll(".chip").forEach(b => b.onclick = () => { setRows(PRESETS[+b.dataset.preset]); errEl.textContent=""; });
+document.getElementById("add").onclick = () => addRow();
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  level = b.dataset.level;
+  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", String(x===b)));
+});
+document.getElementById("go").onclick = run;
+document.getElementById("more").onclick = run;
+document.getElementById("again").onclick = () => { setRows([["",null],["",null],["",null]]); emptyReceipt(); window.scrollTo({top:0}); };
+setRows([["",null],["",null],["",null]]);
+emptyReceipt();
+})();
+</script>
+</body>
+</html>
