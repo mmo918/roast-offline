@@ -29,6 +29,8 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,6vw,44px);lin
 .sub{color:var(--muted);margin:6px 0 0}
 .brand{font-family:var(--display);background:var(--ink);color:#fff;border-radius:999px;padding:8px 16px;font-size:15px;white-space:nowrap}
 .brand b{color:var(--mint);font-weight:600}
+.langBtn{font-family:var(--display);background:transparent;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:8px 16px;font-size:15px;cursor:pointer;white-space:nowrap}
+.langBtn:hover{border-color:var(--mint)}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
 @media (max-width:860px){.grid{grid-template-columns:1fr}}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
@@ -90,16 +92,19 @@ input:focus,button:focus-visible{outline:3px solid var(--mint);outline-offset:1p
 <div class="wrap">
   <header>
     <div>
-      <h1>โดนแซวการใช้เงิน</h1>
-      <p class="sub">ใส่ของที่ซื้อล่าสุด รับใบเสร็จฉบับโดนแซว พร้อมเคล็ดลับประหยัด 1 ข้อ</p>
+      <h1 id="h1">โดนแซวการใช้เงิน</h1>
+      <p class="sub" id="subtext">ใส่ของที่ซื้อล่าสุด รับใบเสร็จฉบับโดนแซว พร้อมเคล็ดลับประหยัด 1 ข้อ</p>
     </div>
-    <div class="brand">AI &amp; <b>FinTech Buddy</b></div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <div class="brand">AI &amp; <b>FinTech Buddy</b></div>
+      <button id="langToggle" class="langBtn" type="button">EN</button>
+    </div>
   </header>
 
   <div class="grid">
     <section class="panel" aria-labelledby="h-in">
       <h2 id="h-in">ซื้ออะไรไปบ้าง?</h2>
-      <p class="hint">ใส่ 1–6 รายการ ใช้ของสมมติได้ ไม่ต้องใส่ข้อมูลบัญชีจริง</p>
+      <p class="hint" id="hint">ใส่ 1–6 รายการ ใช้ของสมมติได้ ไม่ต้องใส่ข้อมูลบัญชีจริง</p>
       <div class="chips" aria-label="ชุดตัวอย่าง">
         <button class="chip" data-preset="0">สายชานม</button>
         <button class="chip" data-preset="1">สายเกมเมอร์</button>
@@ -112,7 +117,7 @@ input:focus,button:focus-visible{outline:3px solid var(--mint);outline-offset:1p
       <div class="rows" id="rows"></div>
       <button class="add" id="add">+ เพิ่มรายการ</button>
       <div class="opts">
-        <span>ระดับความแซ่บ</span>
+        <span id="spiceLabel">ระดับความแซ่บ</span>
         <div class="seg" role="group" aria-label="ระดับความแซ่บ">
           <button type="button" data-level="soft" aria-pressed="true">เบาๆ</button>
           <button type="button" data-level="spicy" aria-pressed="false">แซ่บ</button>
@@ -120,7 +125,7 @@ input:focus,button:focus-visible{outline:3px solid var(--mint);outline-offset:1p
       </div>
       <button class="go" id="go">Roast เลย</button>
       <p class="err" id="err" role="alert"></p>
-      <p class="note">คำแซวเป็นชุดข้อความที่ทีมเตรียมไว้ สุ่มตามของที่ซื้อ เพื่อความสนุกเท่านั้น ไม่ใช่คำแนะนำทางการเงิน</p>
+      <p class="note" id="note">คำแซวเป็นชุดข้อความที่ทีมเตรียมไว้ สุ่มตามของที่ซื้อ เพื่อความสนุกเท่านั้น ไม่ใช่คำแนะนำทางการเงิน</p>
     </section>
 
     <section class="stage" aria-labelledby="h-out" aria-live="polite">
@@ -136,7 +141,7 @@ input:focus,button:focus-visible{outline:3px solid var(--mint);outline-offset:1p
 
   <div class="qr">
     <div id="qrcode" aria-hidden="true"></div>
-    <span>สแกนเปิดเว็บนี้</span>
+    <span id="qrLabel">สแกนเปิดเว็บนี้</span>
   </div>
 </div>
 
@@ -177,7 +182,30 @@ const CATS = [
     "พกกระบอกน้ำไปเอง บางร้านลดราคาให้ด้วย",
     "ตั้งงบเครื่องดื่มต่อสัปดาห์ แยกไว้ในกระเป๋าย่อยเช่น Cloud Pocket ให้เห็นยอดชัดๆ"
   ],
-  badge:["เจ้าแม่ชานม","ลูกค้า VIP ร้านชา","นักชิมไข่มุก","คาเฟ่ฮอปเปอร์ตัวจริง","หุ้นส่วนร้านกาแฟ"] },
+  badge:["เจ้าแม่ชานม","ลูกค้า VIP ร้านชา","นักชิมไข่มุก","คาเฟ่ฮอปเปอร์ตัวจริง","หุ้นส่วนร้านกาแฟ"],
+  en:{ soft:[
+    "You love bubble tea so much, the shop should name a drink after you.",
+    "The boba in your cup probably recognizes your face by now.",
+    "The café down the street basically considers you a business partner.",
+    "Drinking like this, your life will never run out of sweetness.",
+    "One cup isn't enough — it only counts as 'today' after the second.",
+    "Your savings may not be growing, but your tea loyalty points sure are.",
+    "You really know yourself — you knew today called for sugar.",
+    "If bubble tea were a subject, you'd get a straight A."
+  ], spicy:[
+    "Half your blood is probably bubble tea by now — even the boba is tired.",
+    "This month's drink budget could've bought you an entire espresso machine.",
+    "The barista starts making your order the moment they see you walk in.",
+    "Your piggy bank is hungry too, but you'd rather feed a cup instead.",
+    "Going by your tea spending, you're basically this shop's biggest investor.",
+    "The sugar in that cup is nothing compared to the money melting with it.",
+    "Bubble tea isn't an asset — even if you keep it 'in your body.'"
+  ], tip:[
+    "Try limiting bubble tea to 2–3 days a week, and move the saved money into savings on the other days.",
+    "Go for a smaller size or less sweet — saves both money and sugar.",
+    "Bring your own bottle — some shops even give a discount for it.",
+    "Set a weekly drink budget and keep it in a separate pocket like Cloud Pocket so you can see it clearly."
+  ], badge:["Bubble Tea Queen","VIP Tea Shop Customer","Boba Connoisseur","Certified Café Hopper","Coffee Shop Business Partner"] } },
 
 { id:"game", re:/เกม|เติม|สกิน|skin|กาชา|gacha|ตู้สุ่ม|rov|roblox|robux|valorant|free ?fire|pubg|genshin|honkai|minecraft|steam|diamond|เพชร|battle ?pass|แพ็ก|ไอเทม|topup|top ?up/i,
   soft:[
@@ -203,7 +231,28 @@ const CATS = [
     "ปิดการตัดเงินอัตโนมัติจากบัตรในร้านค้าแอป จะได้ต้องคิดก่อนทุกครั้ง",
     "เติมเฉพาะช่วงโปรที่คุ้มจริง ไม่เติมเพราะกลัวพลาดของลิมิเต็ด"
   ],
-  badge:["นักเติมมืออาชีพ","สปอนเซอร์ค่ายเกม","เจ้าพ่อตู้สุ่ม","แรงค์สูงบัญชีต่ำ","เกมเมอร์ทุนหนา"] },
+  badge:["นักเติมมืออาชีพ","สปอนเซอร์ค่ายเกม","เจ้าพ่อตู้สุ่ม","แรงค์สูงบัญชีต่ำ","เกมเมอร์ทุนหนา"],
+  en:{ soft:[
+    "That skin looks amazing, but your wallet wants a level-up too.",
+    "Your in-game character dresses better than you do.",
+    "You're great at topping up — if you topped up savings this well, you'd be a legend.",
+    "High rank in-game, still a rookie in your savings account.",
+    "Next quest: save as much money as you've spent on the game.",
+    "Investing in happiness directly like this — solid choice.",
+    "The loot box loves you, because you never abandon it."
+  ], spicy:[
+    "The loot box gave you good loot, but your bank account rolled a zero.",
+    "This month's top-ups could've earned you a thank-you card from the dev team.",
+    "Your character gets a new outfit every month; you've worn the same shirt for three years.",
+    "If you saved money as well as you save levels, you'd be rich by now.",
+    "Every battle pass season completed, but your financial plan hasn't even started season one.",
+    "So many diamonds in-game, not a single one in real life."
+  ], tip:[
+    "Set a monthly top-up cap and keep that money in a separate pocket so it's clear.",
+    "Wait a day before topping up — if you still want it, go ahead. Cuts a lot of impulse spending.",
+    "Turn off auto-pay from your card in the app store so you have to think before every purchase.",
+    "Only top up during sales that are genuinely worth it — not out of fear of missing a limited item."
+  ], badge:["Professional Top-Upper","Game Studio Sponsor","Loot Box Kingpin","High Rank, Low Balance","Big-Budget Gamer"] } },
 
 { id:"delivery", re:/ค่าส่ง|ส่งฟรี|เดลิเวอรี|delivery|grab ?food|line ?man|ไลน์แมน|food ?panda|แพนด้า|robinhood|shopee ?food|ค่าบริการ|สั่งอาหาร|สั่งข้าว/i,
   soft:[
@@ -228,7 +277,27 @@ const CATS = [
     "ดูยอดรวมหลังบวกค่าส่งและค่าบริการก่อนกดสั่งทุกครั้ง",
     "ทำอาหารง่ายๆ ติดบ้านไว้บ้าง เผื่อวันขี้เกียจจะได้ไม่ต้องสั่ง"
   ],
-  badge:["ลูกค้าประจำไรเดอร์","เจ้าของโค้ดส่วนลด","สายสั่งไม่เดิน","ขาประจำแอปเดลิเวอรี"] },
+  badge:["ลูกค้าประจำไรเดอร์","เจ้าของโค้ดส่วนลด","สายสั่งไม่เดิน","ขาประจำแอปเดลิเวอรี"],
+  en:{ soft:[
+    "The rider probably has your address memorized by heart.",
+    "Super convenient — but the delivery fee flows out of your wallet just as conveniently.",
+    "Impressive — you can pick a menu in three seconds flat.",
+    "Your front door opens more often than your fridge.",
+    "The delivery app should send you a birthday card every year.",
+    "Your legs get full rest while your money gets a full workout."
+  ], spicy:[
+    "Delivery fee plus service fee is starting to cost more than the food itself.",
+    "Five minutes walk to the shop, but you chose to pay 25 baht delivery — so worth it.",
+    "The rider knows your daily schedule better than your best friend does.",
+    "If delivery fees were tuition, you'd have finished a whole course by now.",
+    "The discount code ran out, but your laziness hasn't.",
+    "The fridge at home is so lonely — nobody ever opens it."
+  ], tip:[
+    "Combine orders with friends and split the delivery fee — pay less instantly.",
+    "Set a rule: no more than 2 delivery meals a week, walk out for the rest.",
+    "Check the total after fees and service charge every time before confirming.",
+    "Keep some easy home-cooked food ready, so lazy days don't need an order."
+  ], badge:["Rider's Regular Customer","Discount Code Collector","Order-Not-Walk Type","Delivery App Regular"] } },
 
 { id:"shop", re:/เสื้อ|กางเกง|กระโปรง|เดรส|รองเท้า|กระเป๋า|หมวก|ถุงเท้า|เคส|shopee|ช้อปปี้|lazada|ลาซาด้า|tiktok ?shop|ลดราคา|เซล|sale|โปร|flash|ไลฟ์สด|ตีสอง|เที่ยงคืน|11\.11|12\.12|ช้อป/i,
   soft:[
@@ -253,7 +322,27 @@ const CATS = [
     "ก่อนซื้อ ถามตัวเองว่าจะใส่หรือใช้อย่างน้อย 10 ครั้งไหม",
     "อย่าซื้อเพิ่มแค่เพื่อให้ได้ส่งฟรี คิดยอดรวมก่อนเสมอ"
   ],
-  badge:["สายช้อปเที่ยงคืน","ราชินีตะกร้าสินค้า","ลูกค้าประจำไลฟ์สด","นักล่าโปรตัวจริง","เพื่อนสนิทพี่ไปรษณีย์"] },
+  badge:["สายช้อปเที่ยงคืน","ราชินีตะกร้าสินค้า","ลูกค้าประจำไลฟ์สด","นักล่าโปรตัวจริง","เพื่อนสนิทพี่ไปรษณีย์"],
+  en:{ soft:[
+    "Not everything on sale needs to come home with you.",
+    "Last night's livestream was fun, huh? Clearly, judging by this receipt.",
+    "Your closet is starting to need its own closet.",
+    "Packages arrive so often the mailman is basically a friend now.",
+    "Great style — your savings account, not so much.",
+    "You add to cart faster than you reply to texts."
+  ], spicy:[
+    "On sale doesn't mean free, but you shopped like it was.",
+    "Bought it at 2am, woke up wondering who that person even was.",
+    "The shopping app should make you its brand ambassador.",
+    "50% off but you bought three — that's not really saving.",
+    "Free shipping because you hit the minimum, but that minimum blew your budget by 300.",
+    "So many new clothes you can't keep up before the trend changes."
+  ], tip:[
+    "Leave it in the cart for 24 hours — if you still want it tomorrow, buy it.",
+    "Turn off shopping app notifications at night to cut sleepy impulse buys.",
+    "Before buying, ask yourself if you'll wear or use it at least 10 times.",
+    "Don't buy extra just to hit free shipping — always check the total first."
+  ], badge:["Midnight Shopping Type","Shopping Cart Queen","Livestream Regular","True Deal Hunter","Mailman's Best Friend"] } },
 
 { id:"food", re:/ข้าว|มาม่า|บะหมี่|หมูกระทะ|ชาบู|สุกี้|บุฟเฟ่ต์|buffet|ไก่ทอด|kfc|mcd|แมค|พิซซ่า|pizza|ส้มตำ|ก๋วยเตี๋ยว|ขนม|ขนมปัง|เค้ก|โดนัท|ไอติม|ไอศกรีม|ชีส|ปิ้งย่าง|ซูชิ|ราเมง|หมาล่า|เซเว่น|7-?11|ของกิน|อาหาร|เบอร์เกอร์|burger/i,
   soft:[
@@ -278,7 +367,27 @@ const CATS = [
     "มื้อใหญ่อย่างบุฟเฟ่ต์ ตั้งไว้เป็นรางวัลเดือนละครั้ง จะอร่อยกว่าเดิม",
     "พกขนมจากบ้านไปโรงเรียน ลดค่าขนมจุกจิกระหว่างวัน"
   ],
-  badge:["สายกินตัวจริง","ลูกค้าประจำเซเว่น","นักชิมระดับตำนาน","เจ้าแม่หมาล่า","กระเพาะไร้ก้น"] },
+  badge:["สายกินตัวจริง","ลูกค้าประจำเซเว่น","นักชิมระดับตำนาน","เจ้าแม่หมาล่า","กระเพาะไร้ก้น"],
+  en:{ soft:[
+    "True foodie — stomach full, heart full too.",
+    "If you saved money as well as you eat, nobody could compete.",
+    "The convenience store probably recognizes your face at every branch.",
+    "Great job taking care of your stomach — now let's take care of your wallet too.",
+    "This meal was worth it emotionally; the wallet still needs convincing.",
+    "You pick a menu faster than you pick a major."
+  ], spicy:[
+    "Buffets are meant to be eaten to the max, but savings don't have to be, right?",
+    "You ate mala until your tongue went numb, but your wallet went number.",
+    "You just went in for water and came out with a full bag, every time.",
+    "That much snacks — you should open your own shop.",
+    "The shabu place sees you coming and starts refilling the soup already.",
+    "'Eat to live' isn't your style — you live to eat."
+  ], tip:[
+    "Set a daily food budget — transfer any leftover into savings.",
+    "Go into the convenience store with a list, don't wander every aisle.",
+    "Save big meals like buffets as a once-a-month reward — they'll taste even better.",
+    "Bring snacks from home to school to cut down on little daily treats."
+  ], badge:["True Foodie","7-Eleven Regular","Legendary Taster","Mala Queen","Bottomless Stomach"] } },
 
 { id:"fandom", re:/อัลบั้ม|บั้ม|album|การ์ด|โฟโต้การ์ด|photocard|lightstick|แท่งไฟ|บัตรคอน|คอนเสิร์ต|concert|แฟนมีต|fanmeet|ติ่ง|ศิลปิน|idol|ไอดอล|merch|สินค้าศิลปิน|labubu|ลาบูบู้|art ?toy|อาร์ตทอย|กล่องสุ่ม|pop ?mart|ป๊อปมาร์ท|crybaby|สุ่ม/i,
   soft:[
@@ -303,7 +412,27 @@ const CATS = [
     "เก็บเงินล่วงหน้าสำหรับคอนเสิร์ต ดีกว่าต้องรีบหาเงินตอนบัตรเปิดขาย",
     "ถ้าอยากได้ตัวเฉพาะ ลองแลกกับเพื่อนแทนการสุ่มต่อ"
   ],
-  badge:["ติ่งทุนหนา","นักสุ่มสายมู","ผู้สนับสนุนศิลปินอันดับหนึ่ง","เจ้าของชั้นวางโชว์","ลาบูบู้เลิฟเวอร์"] },
+  badge:["ติ่งทุนหนา","นักสุ่มสายมู","ผู้สนับสนุนศิลปินอันดับหนึ่ง","เจ้าของชั้นวางโชว์","ลาบูบู้เลิฟเวอร์"],
+  en:{ soft:[
+    "Supporting your idol to the fullest — they must be proud.",
+    "Heart 100% full, love 100% full, money down to the last ten baht.",
+    "A mystery box is fun because you don't know what you'll get; your money, on the other hand, you know exactly where it went.",
+    "Your display shelf looks amazing, but your piggy bank is still empty.",
+    "You're great at collecting — if you collected money this well, you'd have a full set.",
+    "Stanning with style — just needs a monthly budget to match."
+  ], spicy:[
+    "Rolled the box until you got three duplicates, still no sign of the one you actually wanted.",
+    "Your idol gets richer every time you open the app.",
+    "Concert tickets cost more than a month of tuition, but the happiness is real too.",
+    "That one card costs as much as twenty cups of bubble tea — sure about this?",
+    "If you saved money as well as you collect cards, you'd have a full set of 'rich.'",
+    "Labubu is grinning wide, because it knows you're coming back."
+  ], tip:[
+    "Set a monthly idol-support budget, keep it in a separate pocket, and use only that amount.",
+    "Buy only the set number of mystery boxes you planned — don't keep going just for the secret figure.",
+    "Save up ahead of time for concerts instead of scrambling for cash when tickets open.",
+    "If you want a specific figure, try trading with a friend instead of rolling more boxes."
+  ], badge:["Big-Budget Stan","Lucky Box Gambler","Artist's #1 Supporter","Display Shelf Owner","Labubu Lover"] } },
 
 { id:"beauty", re:/ลิป|lip|ครีม|เซรั่ม|serum|สกินแคร์|skincare|เครื่องสำอาง|แป้ง|รองพื้น|คุชชั่น|มาสคาร่า|น้ำหอม|perfume|กันแดด|โฟม|โทนเนอร์|ยาทาเล็บ|ทาเล็บ|บิวตี้|watsons|วัตสัน|eveandboy|อีฟแอนด์บอย|sephora/i,
   soft:[
@@ -324,7 +453,23 @@ const CATS = [
     "ลองตัวอย่างหรือขนาดเล็กก่อน ค่อยซื้อขวดใหญ่เมื่อชอบจริง",
     "จดว่ามีสีหรือสูตรอะไรอยู่แล้ว จะได้ไม่ซื้อซ้ำ"
   ],
-  badge:["บิวตี้บล็อกเกอร์ไม่มีช่อง","ราชินีลิปสติก","สายสกินแคร์ตัวตึง","ลูกค้าประจำร้านบิวตี้"] },
+  badge:["บิวตี้บล็อกเกอร์ไม่มีช่อง","ราชินีลิปสติก","สายสกินแคร์ตัวตึง","ลูกค้าประจำร้านบิวตี้"],
+  en:{ soft:[
+    "Skin gets better every day, wallet gets thinner every day — nicely balanced.",
+    "This lipstick shade is barely different from the ones you already have, but the happiness difference is huge.",
+    "Great job taking care of yourself — now take care of your savings the same way.",
+    "Your vanity table is starting to look like a branch store.",
+    "That scent is lovely — lovelier than your remaining balance, even."
+  ], spicy:[
+    "Twenty lipstick shades, but you actually use two.",
+    "So many serum bottles your face doesn't know which one to absorb first.",
+    "Went in to buy sunscreen, came out with a full basket.",
+    "A ten-step skincare routine, a zero-step financial plan."
+  ], tip:[
+    "Finish what you have before buying a new item of the same type.",
+    "Try a sample or small size first, then buy the full bottle once you're sure you like it.",
+    "Keep a note of the shades or formulas you already own so you don't buy duplicates."
+  ], badge:["Beauty Blogger With No Channel","Lipstick Queen","Skincare Heavyweight","Beauty Store Regular"] } },
 
 { id:"media", re:/นิยาย|การ์ตูน|มังงะ|manga|comic|เว็บตูน|webtoon|นิตยสาร|หนังสือพิมพ์|newspaper|อีบุ๊ก|e-?book|kindle|\bmeb\b|ookbee|readery|naiin|นายอินทร์|se-?ed|ซีเอ็ด|จอยลดา|joylada|ธัญวลัย|tunwalai|fictionlog|storylog|wattpad|เหรียญอ่านนิยาย/i,
   soft:[
@@ -347,7 +492,25 @@ const CATS = [
     "ตั้งงบซื้อหนังสือ/นิยายต่อเดือน แยกไว้ในกระเป๋าย่อยให้ชัดเจน",
     "รอช่วงลดราคาใหญ่ เช่นงานหนังสือ แทนการซื้อราคาเต็มทุกครั้ง"
   ],
-  badge:["เจ้าแม่กองดอง","นักสะสมปกสวย","หนอนหนังสือทุนหนา","ลูกค้าประจำร้านหนังสือ"] },
+  badge:["เจ้าแม่กองดอง","นักสะสมปกสวย","หนอนหนังสือทุนหนา","ลูกค้าประจำร้านหนังสือ"],
+  en:{ soft:[
+    "Great at buying, but your to-be-read pile at home is just as tall as before.",
+    "You love reading this much — special respect.",
+    "Covers this pretty deserve a perfect photo for social media.",
+    "Your personal library is starting to outgrow your bedroom.",
+    "Never miss a chapter — a true dedicated reader."
+  ], spicy:[
+    "New volume every week, but the old one is still in its plastic wrap.",
+    "Your to-be-read pile is skyscraper-tall, yet you keep ordering more.",
+    "You top up reading coins every month more than you top up your savings.",
+    "Pre-ordering every discounted book, not because you want to read it right now.",
+    "The bookstore sees your face and starts wrapping your order in plastic already."
+  ], tip:[
+    "Finish what's in your to-be-read pile before buying a new one.",
+    "Try borrowing from a library or a free e-book loan app first — buy to keep only if you really love it.",
+    "Set a monthly book/novel budget and keep it in a clear, separate pocket.",
+    "Wait for big sales like book fairs instead of always buying at full price."
+  ], badge:["Queen of the Unread Pile","Pretty-Cover Collector","Big-Budget Bookworm","Bookstore Regular"] } },
 
 { id:"sub", re:/netflix|เน็ตฟลิกซ์|spotify|สปอติฟาย|youtube ?premium|ยูทูบพรีเมียม|disney|ดิสนีย์|prime ?video|viu|wetv|iqiyi|apple ?music|icloud|สมาชิก|subscription|ซับ|แพ็กเกจ|รายเดือน|โค้ดดูหนัง|chatgpt|canva/i,
   soft:[
@@ -367,7 +530,22 @@ const CATS = [
     "หมุนเวียนสมัครทีละแอปตามเรื่องที่อยากดู แทนการสมัครทุกแอปพร้อมกัน",
     "ลองแชร์แพ็กเกจครอบครัวกับคนในบ้าน ถ้าแอปนั้นอนุญาต"
   ],
-  badge:["สมาชิกพรีเมียมทุกแอป","นักดูซีรีส์ไม่หลับไม่นอน","ราชาการตัดเงินอัตโนมัติ"] },
+  badge:["สมาชิกพรีเมียมทุกแอป","นักดูซีรีส์ไม่หลับไม่นอน","ราชาการตัดเงินอัตโนมัติ"],
+  en:{ soft:[
+    "So many app subscriptions — have you even finished watching everything yet?",
+    "Premium life on every app — hope your savings account goes premium too.",
+    "Small subscription fees that add up to not-so-small at all.",
+    "All-in-one entertainment — just missing the time to watch it."
+  ], spicy:[
+    "Paying for five app subscriptions, but only opening one.",
+    "Some apps you signed up for have probably forgotten you're even a member.",
+    "Auto-debit every month, quiet but more reliable than your partner.",
+    "You finish every series, but you've never once finished checking your own balance."
+  ], tip:[
+    "Check all subscriptions on your phone and cancel anything unused for over a month.",
+    "Rotate subscribing to one app at a time based on what you want to watch, instead of all at once.",
+    "Try sharing a family plan with people at home, if the app allows it."
+  ], badge:["Premium Member of Every App","Sleepless Series Binger","King of Auto-Debit"] } },
 
 { id:"transport", re:/bts|mrt|รถไฟฟ้า|วินมอไซค์|วิน(?!เทจ)|มอไซค์|แท็กซี่|taxi|grab ?bike|grab ?car|bolt|โบลท์|รถเมล์|น้ำมัน|ค่ารถ|ค่าเดินทาง|เรือ|รถตู้/i,
   soft:[
@@ -387,7 +565,22 @@ const CATS = [
     "ระยะใกล้ลองเดินหรือปั่นจักรยาน ได้ทั้งเงินและสุขภาพ",
     "ออกจากบ้านเร็วขึ้นนิดหน่อย จะไม่ต้องเรียกรถเพราะรีบ"
   ],
-  badge:["นักเดินทางสายเร่งรีบ","ลูกค้าประจำวิน","ผู้โดยสารระดับทอง"] },
+  badge:["นักเดินทางสายเร่งรีบ","ลูกค้าประจำวิน","ผู้โดยสารระดับทอง"],
+  en:{ soft:[
+    "Traveling this far — really dedicated to getting to class.",
+    "Transport is a necessary expense — exempt from roasting, just this once.",
+    "Always on the move, able to go anywhere.",
+    "Woke up late and called a motorbike taxi, didn't you? Can tell."
+  ], spicy:[
+    "Five minutes walk away, but you call a ride every single time — your legs are starting to sulk.",
+    "A taxi every day, like having a personal driver on a per-trip basis.",
+    "If you woke up ten minutes earlier, you'd save hundreds a month.",
+    "Ride-hailing apps should give you gold-member discounts by now."
+  ], tip:[
+    "Try a trip pass or monthly pass if you regularly take the same route.",
+    "For short distances, try walking or cycling — good for your wallet and your health.",
+    "Leave home a little earlier so you don't have to call a ride out of rush."
+  ], badge:["Always-in-a-Rush Traveler","Motorbike Taxi Regular","Gold-Tier Passenger"] } },
 
 { id:"gadget", re:/หูฟัง|airpods|มือถือ|iphone|ไอโฟน|samsung|ไอแพด|ipad|แท็บเล็ต|คีย์บอร์ด|keyboard|เมาส์|mouse|จอคอม|มอนิเตอร์|monitor|โน้ตบุ๊ก|notebook|laptop|สายชาร์จ|ที่ชาร์จ|พาวเวอร์แบงค์|power ?bank|ลำโพง|กล้อง|สมาร์ทวอทช์|smart ?watch|nintendo|switch|ps5|playstation|จอยเกม/i,
   soft:[
@@ -407,7 +600,22 @@ const CATS = [
     "เทียบราคาอย่างน้อย 3 ร้าน และดูรุ่นก่อนหน้าที่ราคาลงแล้ว",
     "ดูแลของที่มีให้ดี ใส่เคสหรือเก็บสายชาร์จเป็นที่ จะได้ไม่ต้องซื้อซ้ำ"
   ],
-  badge:["สายเทคทุนหนา","เจ้าของสายชาร์จสิบเส้น","นักอัปเกรดตัวยง"] },
+  badge:["สายเทคทุนหนา","เจ้าของสายชาร์จสิบเส้น","นักอัปเกรดตัวยง"],
+  en:{ soft:[
+    "Shiny new gear — make sure you really use it well.",
+    "True tech enthusiast — your gadget collection beats an actual electronics store.",
+    "Great at upgrading your gear; next, try upgrading your savings too.",
+    "Your headphones sound crystal clear — about as clear as your wallet crying."
+  ], spicy:[
+    "The old device still works fine, but your heart wants the new one.",
+    "Tenth charging cable, because the old ones all mysteriously vanished.",
+    "That keyboard clicks louder than a low-balance alert.",
+    "Zero-percent installment doesn't mean zero baht."
+  ], tip:[
+    "For big-ticket items, save up first instead of financing without a plan.",
+    "Compare prices across at least 3 stores, and check if an older model has dropped in price.",
+    "Take good care of what you have — use a case, keep cables organized — so you don't have to rebuy."
+  ], badge:["Big-Budget Tech Enthusiast","Owner of Ten Charging Cables","Serial Upgrader"] } },
 
 { id:"study", re:/หนังสือ|ชีท|สมุด|ปากกา|ดินสอ|ไฮไลท์|เครื่องเขียน|คอร์ส|เรียนพิเศษ|ติว|ค่าเรียน|ค่าเทอม|อุปกรณ์การเรียน|ค่าสมัครสอบ|สอบ/i,
   soft:[
@@ -427,7 +635,22 @@ const CATS = [
     "ลองหาชีทหรือหนังสือมือสองจากรุ่นพี่ ประหยัดได้เยอะ",
     "คอร์สออนไลน์ ซื้อทีละคอร์ส เรียนจบค่อยซื้อคอร์สต่อไป"
   ],
-  badge:["นักเรียนดีเด่นสายลงทุน","ราชินีปากกาไฮไลท์","นักสะสมสมุด"] }
+  badge:["นักเรียนดีเด่นสายลงทุน","ราชินีปากกาไฮไลท์","นักสะสมสมุด"],
+  en:{ soft:[
+    "Investing in education — no roast needed here, just a compliment.",
+    "That many pens — your notes must look amazing.",
+    "This diligent — future you probably has plenty of savings.",
+    "The best investment is in yourself, and you clearly get that."
+  ], spicy:[
+    "Every highlighter color in the set, but you haven't opened the book yet.",
+    "A new notebook every term, the old one not even ten pages used.",
+    "Your stationery is so cute you're almost scared to use it.",
+    "Bought several online courses, only finished the first chapter of each."
+  ], tip:[
+    "Use up what you have before buying a new set of stationery.",
+    "Look for secondhand sheets or textbooks from seniors — big savings.",
+    "Buy online courses one at a time — finish one before buying the next."
+  ], badge:["Honor Student, Big Investor","Highlighter Pen Queen","Notebook Collector"] } }
 ];
 
 const GENERIC = {
@@ -448,28 +671,55 @@ const GENERIC = {
     "ตั้งออมอัตโนมัติวันที่ได้เงิน เช่นฟีเจอร์แอบเก็บหรือสั่งเก็บของ Kept ก่อนเริ่มใช้จ่าย",
     "ก่อนซื้อถามตัวเองว่า จำเป็น หรือแค่อยากได้"
   ],
-  badge:["นักใช้เงินสายลึกลับ","ผู้ใช้เงินอย่างมีเอกลักษณ์","คนรู้ใจตัวเอง"]
+  badge:["นักใช้เงินสายลึกลับ","ผู้ใช้เงินอย่างมีเอกลักษณ์","คนรู้ใจตัวเอง"],
+  en:{ soft:[
+    "Spent your money just fine, but we can still find something to roast.",
+    "This item is mysterious — let's just keep it as your little secret.",
+    "A truly unique choice, unlike anyone else's.",
+    "This receipt proves you really know what you like."
+  ], spicy:[
+    "What you bought is so odd the roast system had to think for a while.",
+    "Not sure what you bought, but definitely sure the money is gone.",
+    "This receipt is confusing to read, but your wallet understands every line."
+  ], tip:[
+    "Try tracking expenses for 7 days with an app like Meow Jot or FinPow to see where your money actually goes.",
+    "Use the 50/30/20 rule as a starting point: 50 needs, 30 wants, 20 savings.",
+    "Set up auto-save on payday, like a 'sneaky save' feature or Kept, before you start spending.",
+    "Before buying, ask yourself: is this a need, or just a want?"
+  ], badge:["Mysterious Spender","Spender With a Unique Style","Someone Who Knows Themselves"] }
 };
 
 /* มุกเสริมตามยอดรวมและจำนวนรายการ */
 const TOTAL_LINES = [
-  { max:100, lines:["ยอดรวมน่ารักมาก กระเป๋าตังค์ยังยิ้มได้","ประหยัดขนาดนี้ ขอคารวะหนึ่งที"] },
-  { max:300, lines:["ยอดรวมยังพอไหว แต่อย่าเพิ่งวางใจ","ยอดนี้ถ้าทำทุกวัน เดือนนึงก็หลายพันนะ"] },
-  { max:700, lines:["ยอดรวมทำเอากระเป๋าตังค์ถอนหายใจเบาๆ","ยอดนี้เท่ากับค่าขนมหลายวันเลยนะ"] },
-  { max:1500, lines:["ยอดรวมนี้ กระปุกออมสินได้ยินแล้วเป็นลม","ใบเสร็จยาวแบบนี้ ต้องมีผู้ช่วยจดรายจ่ายแล้วล่ะ"] },
-  { max:Infinity, lines:["ยอดรวมนี้ ขอเรียกว่าการลงทุนครั้งใหญ่","ยอดนี้ธนาคารน่าจะโทรมาถามว่าโอเคไหม"] }
+  { max:100, lines:["ยอดรวมน่ารักมาก กระเป๋าตังค์ยังยิ้มได้","ประหยัดขนาดนี้ ขอคารวะหนึ่งที"],
+    en:["The total is adorably small — your wallet can still smile.","Saving this well deserves a salute."] },
+  { max:300, lines:["ยอดรวมยังพอไหว แต่อย่าเพิ่งวางใจ","ยอดนี้ถ้าทำทุกวัน เดือนนึงก็หลายพันนะ"],
+    en:["The total is still manageable, but don't get too comfortable.","Do this every day and it adds up to thousands a month."] },
+  { max:700, lines:["ยอดรวมทำเอากระเป๋าตังค์ถอนหายใจเบาๆ","ยอดนี้เท่ากับค่าขนมหลายวันเลยนะ"],
+    en:["This total makes your wallet let out a quiet sigh.","That's about several days' worth of snack money right there."] },
+  { max:1500, lines:["ยอดรวมนี้ กระปุกออมสินได้ยินแล้วเป็นลม","ใบเสร็จยาวแบบนี้ ต้องมีผู้ช่วยจดรายจ่ายแล้วล่ะ"],
+    en:["Your piggy bank just fainted hearing this total.","A receipt this long means you need an expense tracker, stat."] },
+  { max:Infinity, lines:["ยอดรวมนี้ ขอเรียกว่าการลงทุนครั้งใหญ่","ยอดนี้ธนาคารน่าจะโทรมาถามว่าโอเคไหม"],
+    en:["Let's just call this total a major investment.","The bank might actually call to check if you're okay."] }
 ];
-const MIX_LINES = [
+const MIX_LINES = { th:[
   "ซื้อหลากหลายหมวดมาก เหมือนบุฟเฟ่ต์การใช้เงิน",
   "ใบเสร็จนี้มีครบทุกรสชาติของชีวิต",
   "ครอบคลุมทุกหมวด แบบนี้เรียกว่าใช้เงินรอบด้าน"
-];
-const REPEAT_LINES = [
+], en:[
+  "You bought across so many categories, it's like a spending buffet.",
+  "This receipt has every flavor of life in it.",
+  "Covering every category — truly well-rounded spending."
+] };
+const REPEAT_LINES = { th:[
   "ซื้อซ้ำแบบนี้ เรียกว่ารักจริงไม่ใช่แค่ชอบ",
   "ของเดิมซ้ำสองรอบ สัญญาณว่าติดแล้ว"
-];
+], en:[
+  "Buying it again like this is real love, not just a crush.",
+  "The same thing twice — that's a sign you're hooked."
+] };
 
-const PRESETS = [
+const PRESETS_TH = [
   [["ชานมไข่มุก",65],["ชานมไข่มุก",65],["ขนมปังปิ้ง",45]],
   [["เติมเกม",300],["สกินตัวละคร",199],["มาม่า",8]],
   [["เสื้อลดราคาตอนตีสอง",590],["เคสมือถือ",159],["ค่าส่ง",38]],
@@ -478,6 +728,78 @@ const PRESETS = [
   [["หมูกระทะ",299],["ขนมเซเว่น",87],["ไอติม",45]],
   [["นิยายเล่มใหม่",250],["เหรียญอ่านนิยาย",100],["การ์ตูนเล่มจบ",180]]
 ];
+const PRESETS_EN = [
+  [["Bubble tea",65],["Bubble tea",65],["Toast",45]],
+  [["Game top-up",300],["Character skin",199],["Instant noodles",8]],
+  [["2am sale shirt",590],["Phone case",159],["Shipping fee",38]],
+  [["Delivery fried rice",89],["Delivery fee",25],["Thai tea",55],["App service fee",15]],
+  [["Art toy blind box",420],["Photocard",250],["Bubble tea",65]],
+  [["Korean BBQ",299],["Convenience store snack",87],["Ice cream",45]],
+  [["New novel",250],["Reading coins",100],["Finished comic volume",180]]
+];
+
+const STR = {
+  th:{
+    title:"Roast การใช้เงิน | AI & FinTech Buddy",
+    h1:"โดนแซวการใช้เงิน",
+    sub:"ใส่ของที่ซื้อล่าสุด รับใบเสร็จฉบับโดนแซว พร้อมเคล็ดลับประหยัด 1 ข้อ",
+    chipsLabel:"ชุดตัวอย่าง",
+    chips:["สายชานม","สายเกมเมอร์","สายช้อปดึก","สายเดลิเวอรี","สายติ่ง","สายสายกิน","สายนิยาย"],
+    hIn:"ซื้ออะไรไปบ้าง?",
+    hint:"ใส่ 1–6 รายการ ใช้ของสมมติได้ ไม่ต้องใส่ข้อมูลบัญชีจริง",
+    addBtn:"+ เพิ่มรายการ",
+    spiceLabel:"ระดับความแซ่บ",
+    mild:"เบาๆ", spicy:"แซ่บ",
+    goBtn:"Roast เลย",
+    note:"คำแซวเป็นชุดข้อความที่ทีมเตรียมไว้ สุ่มตามของที่ซื้อ เพื่อความสนุกเท่านั้น ไม่ใช่คำแนะนำทางการเงิน",
+    hOut:"ใบเสร็จของคุณ",
+    more:"แซวอีกรอบ", again:"เริ่มใหม่",
+    share:"แคปหน้าจอไปอวดเพื่อนได้เลย",
+    qr:"สแกนเปิดเว็บนี้",
+    namePh:"เช่น ชานมไข่มุก", pricePh:"บาท",
+    nameAria:"ชื่อรายการ", priceAria:"ราคา (บาท)", delAria:"ลบรายการ",
+    errNoName:"มีรายการที่ใส่ราคาแต่ยังไม่มีชื่อ",
+    errPrice:n=>'ราคาของ "'+n+'" ต้องเป็นตัวเลข 0–1,000,000',
+    errEmpty:"ใส่อย่างน้อย 1 รายการ หรือกดเลือกชุดตัวอย่างด้านบน",
+    shopName:"ร้านโดนแซว", total:"รวม", currency:"บาท",
+    tagRoast:"โดนแซว", tagTip:"โหมดจริงจัง",
+    meter:"ระดับความเผ็ดของใบเสร็จ", badgeLabel:"ฉายา",
+    footer:"บูธ AI &amp; FinTech Buddy · เพื่อความสนุก ไม่ใช่คำแนะนำทางการเงิน",
+    emptyMeta:"รอรายการจากคุณ",
+    emptyBody:'กรอกรายการ แล้วกด "Roast เลย" ใบเสร็จจะพิมพ์ออกมาที่นี่',
+    langBtn:"EN", dateLocale:"th-TH"
+  },
+  en:{
+    title:"Spending Roast | AI & FinTech Buddy",
+    h1:"Get Your Spending Roasted",
+    sub:"Enter your recent purchases to get a roasted receipt plus one money-saving tip.",
+    chipsLabel:"Example presets",
+    chips:["Tea Addict","Gamer","Midnight Shopper","Delivery Fan","Fandom Stan","Foodie","Bookworm"],
+    hIn:"What did you buy?",
+    hint:"Add 1–6 items. Made-up examples are fine — no real account info needed.",
+    addBtn:"+ Add item",
+    spiceLabel:"Spice level",
+    mild:"Mild", spicy:"Spicy",
+    goBtn:"Roast it!",
+    note:"The roasts are pre-written jokes randomly matched to what you bought — just for fun, not financial advice.",
+    hOut:"Your Receipt",
+    more:"Roast again", again:"Start over",
+    share:"Screenshot it and show your friends!",
+    qr:"Scan to open this site",
+    namePh:"e.g. Bubble tea", pricePh:"Baht",
+    nameAria:"Item name", priceAria:"Price (baht)", delAria:"Delete item",
+    errNoName:"One item has a price but no name",
+    errPrice:n=>'Price for "'+n+'" must be a number between 0–1,000,000',
+    errEmpty:"Add at least 1 item, or pick an example preset above",
+    shopName:"Roast Receipt Co.", total:"Total", currency:"Baht",
+    tagRoast:"ROASTED", tagTip:"Real talk",
+    meter:"Receipt spice level", badgeLabel:"Title",
+    footer:"AI &amp; FinTech Buddy booth · For fun only, not financial advice",
+    emptyMeta:"Waiting for your items",
+    emptyBody:'Fill in your items and hit "Roast it!" — your receipt will print right here.',
+    langBtn:"ไทย", dateLocale:"en-US"
+  }
+};
 
 /* ================= ตัวระบบ ================= */
 const rowsEl = document.getElementById("rows");
@@ -486,15 +808,19 @@ const receipt = document.getElementById("receipt");
 const after = document.getElementById("after");
 const shareEl = document.getElementById("share");
 let level = "soft";
+let lang = "th";
 let last = {};
+
+function pickLang(obj){ return (lang === "en" && obj.en) ? obj.en : obj; }
 
 function addRow(name, price){
   if (rowsEl.children.length >= 6) return;
+  const t = STR[lang];
   const r = document.createElement("div");
   r.className = "row";
-  r.innerHTML = '<input class="n" maxlength="40" placeholder="เช่น ชานมไข่มุก" aria-label="ชื่อรายการ">' +
-    '<input class="p" inputmode="decimal" maxlength="7" placeholder="บาท" aria-label="ราคา (บาท)">' +
-    '<button class="del" type="button" aria-label="ลบรายการ">×</button>';
+  r.innerHTML = '<input class="n" maxlength="40" placeholder="' + esc(t.namePh) + '" aria-label="' + esc(t.nameAria) + '">' +
+    '<input class="p" inputmode="decimal" maxlength="7" placeholder="' + esc(t.pricePh) + '" aria-label="' + esc(t.priceAria) + '">' +
+    '<button class="del" type="button" aria-label="' + esc(t.delAria) + '">×</button>';
   r.querySelector(".n").value = name || "";
   r.querySelector(".p").value = price != null ? price : "";
   r.querySelector(".del").onclick = () => { r.remove(); if (!rowsEl.children.length) addRow(); };
@@ -502,17 +828,18 @@ function addRow(name, price){
 }
 function setRows(list){ rowsEl.innerHTML = ""; list.forEach(([n,p]) => addRow(n,p)); }
 function readItems(){
+  const t = STR[lang];
   const out = [];
   for (const r of rowsEl.children){
     const n = r.querySelector(".n").value.trim();
     const pRaw = r.querySelector(".p").value.replace(/,/g,"").trim();
     if (!n && !pRaw) continue;
     const p = Number(pRaw);
-    if (!n) return { error:"มีรายการที่ใส่ราคาแต่ยังไม่มีชื่อ" };
-    if (!pRaw || !isFinite(p) || p < 0 || p > 1000000) return { error:'ราคาของ "' + n + '" ต้องเป็นตัวเลข 0–1,000,000' };
+    if (!n) return { error:t.errNoName };
+    if (!pRaw || !isFinite(p) || p < 0 || p > 1000000) return { error:t.errPrice(n) };
     out.push({ name:n, price:Math.round(p*100)/100 });
   }
-  if (!out.length) return { error:"ใส่อย่างน้อย 1 รายการ หรือกดเลือกชุดตัวอย่างด้านบน" };
+  if (!out.length) return { error:t.errEmpty };
   return { items:out };
 }
 const fmt = n => n.toLocaleString("th-TH",{maximumFractionDigits:2});
@@ -543,40 +870,77 @@ function analyse(items){
 
 function roast(items){
   const a = analyse(items);
-  const src = a.cat || GENERIC;
+  const src = pickLang(a.cat || GENERIC);
   const total = items.reduce((s,i)=>s+i.price,0);
   const main = pick(src[level] || src.soft, "main");
   const extras = [];
-  if (a.hasRepeat) extras.push(pick(REPEAT_LINES,"rep"));
-  else if (a.catsUsed >= 3) extras.push(pick(MIX_LINES,"mix"));
-  extras.push(pick(TOTAL_LINES.find(t => total <= t.max).lines, "tot"));
+  if (a.hasRepeat) extras.push(pick(REPEAT_LINES[lang],"rep"));
+  else if (a.catsUsed >= 3) extras.push(pick(MIX_LINES[lang],"mix"));
+  const bucket = TOTAL_LINES.find(t => total <= t.max);
+  extras.push(pick(lang === "en" ? bucket.en : bucket.lines, "tot"));
   return { main, extra: extras.join(" "), tip: pick(src.tip,"tip"), badge: pick(src.badge,"badge"), total };
 }
 
 function render(items, r){
+  const t = STR[lang];
   const now = new Date();
-  const stamp = now.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"2-digit"}) + " " + now.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"});
+  const stamp = now.toLocaleDateString(t.dateLocale,{day:"numeric",month:"short",year:"2-digit"}) + " " + now.toLocaleTimeString(t.dateLocale,{hour:"2-digit",minute:"2-digit"});
   const heat = Math.min(100, Math.round(20 + Math.log10(r.total+1)*22 + (level==="spicy"?12:0)));
   receipt.className = "receipt";
   void receipt.offsetWidth;
   receipt.className = "receipt print";
   receipt.innerHTML =
-    '<div class="rhead"><div class="t">ร้านโดนแซว</div><div class="m">' + esc(stamp) + '</div></div>' +
+    '<div class="rhead"><div class="t">' + esc(t.shopName) + '</div><div class="m">' + esc(stamp) + '</div></div>' +
     items.map(i => '<div class="line"><span>' + esc(i.name) + '</span><span>' + fmt(i.price) + '</span></div>').join("") +
-    '<div class="total"><span>รวม</span><span>' + fmt(r.total) + ' บาท</span></div>' +
-    '<div class="sec"><span class="tag r">โดนแซว</span><div class="roast">' + esc(r.main) + '</div><div class="extra">' + esc(r.extra) + '</div></div>' +
-    '<div class="meter">ระดับความเผ็ดของใบเสร็จ ' + heat + '%<div class="bar"><i style="width:' + heat + '%"></i></div></div>' +
-    '<div class="sec"><span class="tag t">โหมดจริงจัง</span><div class="tip">' + esc(r.tip) + '</div></div>' +
-    '<div class="badge">ฉายา: ' + esc(r.badge) + '</div>' +
-    '<div class="foot">บูธ AI &amp; FinTech Buddy · เพื่อความสนุก ไม่ใช่คำแนะนำทางการเงิน</div>';
+    '<div class="total"><span>' + esc(t.total) + '</span><span>' + fmt(r.total) + ' ' + esc(t.currency) + '</span></div>' +
+    '<div class="sec"><span class="tag r">' + esc(t.tagRoast) + '</span><div class="roast">' + esc(r.main) + '</div><div class="extra">' + esc(r.extra) + '</div></div>' +
+    '<div class="meter">' + esc(t.meter) + ' ' + heat + '%<div class="bar"><i style="width:' + heat + '%"></i></div></div>' +
+    '<div class="sec"><span class="tag t">' + esc(t.tagTip) + '</span><div class="tip">' + esc(r.tip) + '</div></div>' +
+    '<div class="badge">' + esc(t.badgeLabel) + ': ' + esc(r.badge) + '</div>' +
+    '<div class="foot">' + t.footer + '</div>';
   after.hidden = false; shareEl.hidden = false;
   if (window.innerWidth < 860) receipt.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" });
 }
 
 function emptyReceipt(){
+  const t = STR[lang];
   receipt.className = "receipt empty";
-  receipt.innerHTML = '<div class="rhead"><div class="t">ร้านโดนแซว</div><div class="m">รอรายการจากคุณ</div></div><p style="margin:0">กรอกรายการ แล้วกด "Roast เลย" ใบเสร็จจะพิมพ์ออกมาที่นี่</p>';
+  receipt.innerHTML = '<div class="rhead"><div class="t">' + esc(t.shopName) + '</div><div class="m">' + esc(t.emptyMeta) + '</div></div><p style="margin:0">' + esc(t.emptyBody) + '</p>';
   after.hidden = true; shareEl.hidden = true;
+}
+
+function applyLang(){
+  const t = STR[lang];
+  document.documentElement.lang = lang === "en" ? "en" : "th";
+  document.title = t.title;
+  document.getElementById("h1").textContent = t.h1;
+  document.getElementById("subtext").textContent = t.sub;
+  document.querySelector(".chips").setAttribute("aria-label", t.chipsLabel);
+  document.querySelectorAll(".chip").forEach((b,i) => { if (t.chips[i]) b.textContent = t.chips[i]; });
+  document.getElementById("h-in").textContent = t.hIn;
+  document.getElementById("hint").textContent = t.hint;
+  document.getElementById("add").textContent = t.addBtn;
+  document.getElementById("spiceLabel").textContent = t.spiceLabel;
+  document.querySelector(".seg").setAttribute("aria-label", t.spiceLabel);
+  document.querySelector('[data-level="soft"]').textContent = t.mild;
+  document.querySelector('[data-level="spicy"]').textContent = t.spicy;
+  document.getElementById("go").textContent = t.goBtn;
+  document.getElementById("note").textContent = t.note;
+  document.getElementById("h-out").textContent = t.hOut;
+  document.getElementById("more").textContent = t.more;
+  document.getElementById("again").textContent = t.again;
+  document.getElementById("share").textContent = t.share;
+  document.getElementById("qrLabel").textContent = t.qr;
+  document.getElementById("langToggle").textContent = t.langBtn;
+  rowsEl.querySelectorAll(".row").forEach(r => {
+    r.querySelector(".n").placeholder = t.namePh;
+    r.querySelector(".n").setAttribute("aria-label", t.nameAria);
+    r.querySelector(".p").placeholder = t.pricePh;
+    r.querySelector(".p").setAttribute("aria-label", t.priceAria);
+    r.querySelector(".del").setAttribute("aria-label", t.delAria);
+  });
+  errEl.textContent = "";
+  emptyReceipt();
 }
 
 function run(){
@@ -586,7 +950,7 @@ function run(){
   render(r.items, roast(r.items));
 }
 
-document.querySelectorAll(".chip").forEach(b => b.onclick = () => { setRows(PRESETS[+b.dataset.preset]); errEl.textContent=""; });
+document.querySelectorAll(".chip").forEach(b => b.onclick = () => { setRows((lang === "en" ? PRESETS_EN : PRESETS_TH)[+b.dataset.preset]); errEl.textContent=""; });
 document.getElementById("add").onclick = () => addRow();
 document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
   level = b.dataset.level;
@@ -595,8 +959,9 @@ document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
 document.getElementById("go").onclick = run;
 document.getElementById("more").onclick = run;
 document.getElementById("again").onclick = () => { setRows([["",null],["",null],["",null]]); emptyReceipt(); window.scrollTo({top:0}); };
+document.getElementById("langToggle").onclick = () => { lang = lang === "th" ? "en" : "th"; applyLang(); };
 setRows([["",null],["",null],["",null]]);
-emptyReceipt();
+applyLang();
 })();
 </script>
 </body>
